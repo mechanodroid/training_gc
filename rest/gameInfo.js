@@ -16,6 +16,8 @@ var masterGames = [
    {guid: 14, name: "Crates and Barrels", minNumberOfPlayers: 1, maxNumberOfPlayers: 1}
 ];
 
+
+
 var feather = require('../lib/feather').getFeather();
 
 module.exports = {
@@ -29,5 +31,11 @@ module.exports = {
      // cb(null, req.session.user);
      cb(null, masterGames);
     }
+
+
+
+
+
+
   }
 };

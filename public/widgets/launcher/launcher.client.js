@@ -16,7 +16,7 @@ feather.ns("training_gc");
         var masterGamesFromRest;
 
         $.ajax({
-          url: 'http://benvm:8080/_rest/gameInfo/list/',
+          url: 'http://benvm:8080/_rest/gameInfo/add/',
           dataType: "json",
           success: function(data) {
              var gameSelect = me.get("#gamesSelect");
