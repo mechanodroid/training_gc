@@ -22,7 +22,7 @@ module.exports = {
 
   "get": {
 
-    "/": function(req, res, cb) {
+    "/:info": function(req, res, cb) {
 
       feather.logger.warn({category: 'rest', message: 'someone is getting game info'});
 
