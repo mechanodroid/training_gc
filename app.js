@@ -6,7 +6,7 @@ exports.onInit = function(feather, cb) {
   var api = require('./lib/api');
   feather.ns('training');
   training.api = api;
-
+  
   if (typeof cb === "function") cb();
 };
 

@@ -1,3 +1,9 @@
+
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+
 lib-cov
 *.seed
 *.log
@@ -15,3 +21,5 @@ node_modules
 npm-debug.log
 
 public/feather-res-cache
+
+
