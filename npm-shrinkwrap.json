@@ -2,6 +2,9 @@
   "name": "Training_Game_Center",
   "version": "0.1.0",
   "dependencies": {
+    "node-uuid" : {
+      "version": "1.3.3"
+    },
     "underscore": {
       "version": "1.3.3"
     },
