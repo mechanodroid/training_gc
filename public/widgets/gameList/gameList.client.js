@@ -12,7 +12,8 @@ feather.ns("training_gc");
       },
       onReady: function() {
         var me = this;
-        debugger;
+
+        
         var gameChannel = feather.socket.subscribe({id: "games"});
         var myUsername = feather.util.qs.user || "honeypotter";
 

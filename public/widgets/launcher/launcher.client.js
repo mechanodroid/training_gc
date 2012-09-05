@@ -16,7 +16,7 @@ feather.ns("training_gc");
         var masterGamesFromRest;
 
         $.ajax({
-          url: 'http://benvm:8080/_rest/gameInfo/list/',
+          url: '/_rest/gameInfo/list/',
           dataType: "json",
           success: function(data) {
              var gameSelect = me.get("#gamesSelect");
@@ -32,10 +32,33 @@ feather.ns("training_gc");
 
         function launchGame(gamesFromRest){
           var gameName = gamesFromRest[me.get("#gamesSelect").val()].name;
-          gameStatsChannel.send("message", {message: gameName, username: myUsername});
+          gameStatsChannel.send("message", {message: "launched game:" + gameName, username: myUsername});
           appendToLog("Me: " + gameName, " launched");
           me.get("#gamesSelect").val("");
-          alert('Game Has Launched: '+gameName);            
+          feather.alert("game launcher",'Game Has Launched: '+gameName);           
+          var body = {
+            name : gameName,
+            username : myUsername,
+          }
+
+          var request = $.ajax({
+            url: '/_rest/gameInfo/addNew/',
+            dataType: "html",
+            type: "POST",
+            data: body,
+          });
+
+          request.done(function(msg) {
+            debugger;
+            $("#gameLog").html( msg );
+          });
+
+          request.fail(function(jqXHR, textStatus) {
+            alert( "Request failed: " + textStatus );
+          });
+
+
+
 
         }
 
