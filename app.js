@@ -2,7 +2,6 @@
 
 // if you implement onInit, you must call cb() when done, so the framework knows when to continue start-up
 exports.onInit = function(feather, cb) {
-
   var airborneConfig = feather.config('airborne');
 
   if (airborneConfig && airborneConfig.enabled) {
@@ -34,6 +33,12 @@ exports.onInit = function(feather, cb) {
     feather.logger.info({message: 'configured environment does not have an airborne section defined', category: 'airborne'});
     cb();
   }  
+  debugger;
+  var api = require('./lib/api');
+  feather.ns('training');
+  training.api = api;
+  
+  if (typeof cb === "function") cb();
 };
 
 

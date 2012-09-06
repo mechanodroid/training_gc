@@ -1,4 +1,6 @@
 var uuid = require('node-uuid/uuid');
+var _ = require('underscore');
+var activeGames = require('../lib/data/activeGames');
 
 var masterGames = [ 
    {id: 0, name: "Ninja", minNumberOfPlayers: 1, maxNumberOfPlayers: 1},
@@ -43,30 +45,54 @@ module.exports = {
       debugger;
 
       feather.logger.warn({category: 'rest', message: req.body.username + ' is launching a new ' + req.body.name});
-      var id = uuid.v1();
-      req.body.guid = id;
-      activeGames.push(req.body);
-      training.api.channels.statsChannel.sendMessage('stats', req.body);
+      var game = activeGames.add(req.body);
+      cb(null, game);
     },
     "/join": function(req, res, cb) {
       debugger;
-      feather.logger.warn({category: 'rest', message: req.body.username + ' joined a game in progress ' + req.body.guid});
+      
       for(var i = 0; i < activeGames.length; i++) {
         if (req.body.guid == activeGames[i].guid) {
           var game = activeGames[i];
+          // check if user is already in game 
+          for (var j = 0; j < game.users.length; j++)
+          {
+            if (game.users[j] == req.body.username)
+              var userIsWaiting = true;
+          }
+          game.currentlyWaiting = parseInt(game.currentlyWaiting) + 1;
+          game.action = "update";
+          if (!userIsWaiting) {
+            training.api.channels.statsChannel.sendMessage('stats', game);
+            feather.logger.warn({category: 'rest', message: req.body.username + ' joined a game in progress ' + game.guid});
+          } else {
+            training.api.channels.statsChannel.sendMessage('notify', "You have already joined this game.");
+          }
+
           break;
         }
       };
+      if (game == undefined) {
+        training.api.channels.statsChannel.sendMessage('notify', "That game is no longer open for new players.");
+      }
 
-      game.currentlyWaiting = parseInt(game.currentlyWaiting) + 1;
-      game.action = "update";
-      training.api.channels.statsChannel.sendMessage('stats', game);
+      cb(null, game);
+    },
+    "/leave": function(req, res, cb) {
+      
+    },
+    "/remove": function(req, res, cb) {
+      debugger;
+      feather.logger.warn({category: 'rest', message: 'The game ' + req.body.game.guid + ' has been removed from stats'});
+      for (var i = 0; i < activeGames.length; i++) {
+        if (req.body.guid == activeGames[i].guid) {
+          var game = activeGames[i];
+          game.action = "pau";
+          training.api.channels.statsChannel.sendMessage('stats', game);
+          break;
+        }
+      }
+          cb(null, game);
     }
-
-
-
-
-
-
   }
 };

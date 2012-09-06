@@ -1,4 +1,5 @@
 feather.ns("training_gc");
+
 (function() {
   training_gc.statTest = feather.Widget.create({
     name: "training_gc.statTest",
@@ -9,40 +10,47 @@ feather.ns("training_gc");
       },
       onReady: function() {
         var me = this;
-
         var gameChannel = feather.socket.subscribe({id: "games"});
-        var myUsername = feather.util.qs.user || "honeypotter";
 
-        me.domEvents.bind(me.get('#sendstats'), 'click', function() {
-          //debugger;
+        me.domEvents.bind(me.get('#add'), 'click', function() {
           var text = me.get('#statinput').val();
           var stat = JSON.parse(text);
-          stat.username = myUsername;
           $.ajax({
-              url: "/_rest/gameInfo/addNew",
-              type: "post",
-              data: stat,
-              // callback handler that will be called on success
-              success: function(response, textStatus, jqXHR){
-                  // log a message to the console
-                  feather.logger.debug("Hooray, it worked!");
-              },
-              // callback handler that will be called on error
-              error: function(jqXHR, textStatus, errorThrown){
-                  // log the error to the console
-                  feather.logger.error(
-                      "The following error occured: "+
-                      textStatus, errorThrown
-                  );
-              },
-              // callback handler that will be called on completion
-              // which means, either on success or error
-              complete: function(){
-                  // enable the inputs
-                  //$inputs.removeAttr("disabled");
-              }
-          });
+            url: "/_rest/gameInfo/addNew",
+            type: "post",
+            data: stat,
+            success: function(response, textStatus, jqXHR){
+                //feather.logger.debug("");
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                feather.logger.error(
+                    "The following error occured: "+
+                    textStatus, errorThrown
+                );
+            },
+            complete: function(){
+            }
         });
+          //gameChannel.send('add', stat);
+        });
+        
+        me.domEvents.bind(me.get('#update'), 'click', function() {
+          var text = me.get('#statinput').val();
+          var stat = JSON.parse(text);
+          gameChannel.send('update', stat);
+        });
+        
+        me.domEvents.bind(me.get('#remove'), 'click', function() {
+          var text = me.get('#statinput').val();
+          var stat = JSON.parse(text);
+          gameChannel.send('remove', stat);
+        });
+        
+        me.domEvents.bind(me.get('#notify'), 'click', function() {
+          var text = me.get('#statinput').val();
+          gameChannel.send('notify', text);
+        });
+        
       }
     }
   });

@@ -1,5 +1,3 @@
-
-
 feather.ns("training_gc");
 (function() {
   training_gc.gameList = feather.Widget.create({
@@ -7,13 +5,9 @@ feather.ns("training_gc");
     path: "widgets/gameList/",
     prototype: {
       onInit: function() {
-        var me = this;
-        
       },
       onReady: function() {
         var me = this;
-
-        
         var gameChannel = feather.socket.subscribe({id: "games"});
         var myUsername = feather.util.qs.user || "honeypotter";
 
@@ -26,6 +20,7 @@ feather.ns("training_gc");
              }
             }
         });
+        
         function appendGameLine(g) {
           feather.Widget.load({
             path: 'widgets/gameLine/',
@@ -61,35 +56,42 @@ feather.ns("training_gc");
           });
         }
         
+        function findGameLine(g) {
+          return me.children && me.children.findById("gameLine" + g.guid);
+        }
+        
         function updateGameLine(g) {
-          var gameLine = me.children && me.children.findById("gameLine" + g.guid);
-
+          var gameLine = findGameLine(g);
           if(gameLine) {
               gameLine.updateData(g);
-            
           } else {
             throw "This game does not exist";
           } 
         }
 
         function removeGameLine(g) {
-          var gameLine = me.children && me.children.findById("gameLine" + g.guid);
-          if (gameLine)
+          var gameLine = findGameLine(g);
+          if (gameLine) {
             gameLine.dispose();
-          else 
+          } else {
             throw "This game does not exist";
-
+          }
         }
 
-        gameChannel.on("stats", function(args) {
-          //debugger;
-
-          if (args.data.action == "new")
+        gameChannel.on("add", function(args) {
             appendGameLine(args.data);
-          if (args.data.action == "pau")
-            removeGameLine(args.data);
-          if (args.data.action == "update")
+        });
+        
+        gameChannel.on("update", function(args) {
             updateGameLine(args.data);
+        });
+        
+        gameChannel.on("remove", function(args) {
+            removeGameLine(args.data);
+        });
+        
+        gameChannel.on("notify", function(args) {
+          feather.alert('Message from Game Center', args.data);
         });
       }
     }
