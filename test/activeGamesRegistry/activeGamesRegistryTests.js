@@ -48,11 +48,11 @@ describe('Active Games Registry Tests', function() {
     list.length.should.equal(0, 'expecting empty list');
 
     try {
-      //debugger;
+      debugger;
       activeGames.add("jdoe", -1);
       true.should.equal(false, 'expecting join to throw an error');
     } catch (err) {
-      err.message.should.equal("Unable to find the requested game.", 'expecting error message');
+      err.message.should.eql("Unable to find the requested game.", 'expecting error message');
     }
     
     done();
@@ -65,7 +65,6 @@ describe('Active Games Registry Tests', function() {
     list.length.should.equal(0, 'expecting empty list');
 
     try {
-      debugger;
       activeGames.join("jdoe", -1);
       true.should.equal(false, 'expecting join to throw an error');
     } catch (err) {
