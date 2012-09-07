@@ -25,27 +25,8 @@ var masterGamesTest = [];
 
 var feather = require('../lib/feather').getFeather();
 
-function loadMasterList(){
-    feather.logger.warn({category:'REST',message:'Getting master games list from server'});
-    training.api.game.find({
-      view : "default"
-    }, function (err, result){
-        if(err) {
-          feather.logger.warn({category:'REST',message:'Could not find any results in games'});
-        } else {
-          var newGame = {
-            id : 0,
-            name : ""
-          }; 
-          result.documents.forEach(function(key, id, documents) {
-            newGame.id = id;
-            newGame.name = key.name;
-            masterGamesTest.push(newGame);
-            feather.logger.debug({category:'REST', message:'Found document w/ id ' + id + 'key ' + key});
-          });
+function loadMasterList(data){
 
-        }   
-    });
 }
 
 
@@ -55,11 +36,25 @@ module.exports = {
 
     "/:list": function(req, res, cb) {
 
-      loadMasterList();
-      feather.logger.warn({category: 'rest', message: 'someone is getting game info'});
+      feather.logger.warn({category:'REST',message:'Getting master games list from server'});
+      training.api.game.find({
+        view : "default"
+      }, function (err, result){
+        if(err) {
+          feather.logger.warn({category:'REST',message:'Could not find any results in games'});
+          cb(null, masterGamesTest);
+
+        } else {
+          masterGamesTest = [];
+          result.documents.forEach(function(key, id, documents) {
+            masterGamesTest.push({id:id,name:key.name});
+            feather.logger.debug({category:'REST', message:'Found document w/ id ' + id + 'key ' + key.name});
+          });
+          cb(null, masterGamesTest);
+        }   
+      });
 
      // cb(null, req.session.user);
-     cb(null, masterGamesTest);
     },
     "/activeGames": function(req, res, cb) {
       cb(null, activeGames);
