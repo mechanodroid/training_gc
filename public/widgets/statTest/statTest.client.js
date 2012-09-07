@@ -51,6 +51,27 @@ feather.ns("training_gc");
           gameChannel.send('notify', text);
         });
         
+        gameChannel.on("add", function(args) {
+            debugger;
+            var label = me.get('#notifications');
+            label.html("<p>add: " + JSON.stringify(args.data) + "</p>");
+        });
+        
+        gameChannel.on("update", function(args) {
+            var label = me.get('#notifications');
+            label.html("<p>add: " + JSON.stringify(args.data) + "</p>");
+        });
+        
+        gameChannel.on("remove", function(args) {
+            var label = me.get('#notifications');
+            label.html("<p>add: " + JSON.stringify(args.data) + "</p>");
+        });
+        
+        gameChannel.on("notify", function(args) {
+          var label = me.get('#notifications');
+          label.html("<p>add: " + JSON.stringify(args.data) + "</p>");
+          feather.alert('Message from Game Center', args.data);
+        });
       }
     }
   });
