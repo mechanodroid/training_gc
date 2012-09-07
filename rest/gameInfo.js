@@ -20,7 +20,6 @@ var masterGames = [
    {id: 14, name: "Crates and Barrels", minNumberOfPlayers: 1, maxNumberOfPlayers: 1}
 ];
 
-var activeGames = [];
 var feather = require('../lib/feather').getFeather();
 
 module.exports = {
@@ -43,55 +42,44 @@ module.exports = {
       debugger;
 
       feather.logger.warn({category: 'rest', message: req.body.username + ' is launching a new ' + req.body.name});
-      var game = activeGames.add(req.body);
+      try {
+        var game = activeGames.add(req.body);
+      } catch (exception) {
+        throw new Error(exception);
+      }
+
       cb(null, game);
     },
     "/join": function(req, res, cb) {
       debugger;
       
-      for(var i = 0; i < activeGames.length; i++) {
-        if (req.body.guid == activeGames[i].guid) {
-          var game = activeGames[i];
-          // check if user is already in game 
-          for (var j = 0; j < game.users.length; j++)
-          {
-            if (game.users[j] == req.body.username)
-              var userIsWaiting = true;
-          }
-          game.currentlyWaiting = parseInt(game.currentlyWaiting) + 1;
-          game.action = "update";
-          if (!userIsWaiting) {
-            training.api.channels.statsChannel.sendMessage('stats', game);
-            feather.logger.warn({category: 'rest', message: req.body.username + ' joined a game in progress ' + game.guid});
-          } else {
-            training.api.channels.statsChannel.sendMessage('notify', "You have already joined this game.");
-          }
-
-          break;
-        }
-      };
-      if (game == undefined) {
-        training.api.channels.statsChannel.sendMessage('notify', "That game is no longer open for new players.");
+      feather.logger.warn({category: 'rest', message: req.body.username + ' wants to join a game: ' + game.guid});
+      try {
+        var game = activeGames.join(req.body);
+      } catch (exception) {
+        throw new Error(exception);
       }
 
       cb(null, game);
     },
     "/leave": function(req, res, cb) {
-      
+      feather.logger.warn({category: 'rest', message: req.body.username + ' wants to leave a game: ' + game.guid});
+      try {
+        var game = activeGames.leave(req.body);
+      } catch (exception) {
+        throw new Error(exception);
+      }
     },
     "/remove": function(req, res, cb) {
       debugger;
-      feather.logger.warn({category: 'rest', message: 'The game ' + req.body.game.guid + ' has been removed from stats'});
-      for (var i = 0; i < activeGames.length; i++) {
-        if (req.body.guid == activeGames[i].guid) {
-          var game = activeGames[i];
-          game.action = "pau";
-          training.api.channels.statsChannel.sendMessage('stats', game);
-          break;
-        }
+      try {
+        var game = activeGames.remove(req.body);
+        feather.logger.warn({category: 'rest', message: 'The game ' + req.body.game.guid + ' has been removed from stats'});
+      } catch (exception) {
+        throw new Error(exception);
       }
-          cb(null, game);
+      
+      cb(null, game);
     }
-
   }
 };
