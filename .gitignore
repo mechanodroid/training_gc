@@ -21,5 +21,4 @@ node_modules
 npm-debug.log
 
 public/feather-res-cache
-
-
+conf/ryan.json

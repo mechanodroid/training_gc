@@ -13,29 +13,52 @@ feather.ns("training_gc");
         var gameStatsRoom = me.options.gamesRoom || "lobby";
         var gameStatsChannel = feather.socket.subscribe({id: gameStatsRoom});
         var myUsername = feather.util.qs.user || "joeschmoe";
-        var masterGamesFromRest = 
+        var masterGamesFromRest;
 
         $.ajax({
-          url: 'http://benvm:8080/_rest/gameInfo/',
+          url: '/_rest/gameInfo/list/',
           dataType: "json",
           success: function(data) {
              var gameSelect = me.get("#gamesSelect");
              for (var i = 0, len = data.length; i < len; ++i) {
                  var item = data[i];
-                 gameSelect.append("<option value=\""+item.guid+"\">"+item.name+"</option>");
+                 gameSelect.append("<option value=\""+item.id+"\">"+item.name+"</option>");
              }
-            alert('Load was performed.'+data);            
+            masterGamesFromRest = data;
             }
         });
         
 
 
-        function launchGame(){
-          var gameName = me.get("#gamesSelect").val();
-          gameStatsChannel.send("message", {message: gameName, username: myUsername});
+        function launchGame(gamesFromRest){
+          var gameName = gamesFromRest[me.get("#gamesSelect").val()].name;
+          gameStatsChannel.send("message", {message: "launched game:" + gameName, username: myUsername});
           appendToLog("Me: " + gameName, " launched");
           me.get("#gamesSelect").val("");
-          alert('Game Has Launched.'+gameName);            
+          feather.alert("game launcher",'Game Has Launched: '+gameName);           
+          var body = {
+            name : gameName,
+            username : myUsername,
+          }
+
+          var request = $.ajax({
+            url: '/_rest/gameInfo/addNew/',
+            dataType: "html",
+            type: "POST",
+            data: body,
+          });
+
+          request.done(function(msg) {
+            debugger;
+            $("#gameLog").html( msg );
+          });
+
+          request.fail(function(jqXHR, textStatus) {
+            alert( "Request failed: " + textStatus );
+          });
+
+
+
 
         }
 
@@ -49,7 +72,7 @@ feather.ns("training_gc");
 
         //when one of my buttons is clicked, send a chat message on the chat channel
         me.domEvents.bind(me.get("#launchButton"), "click", function() {
-          launchGame();
+          launchGame(masterGamesFromRest);
         });
       }
     }

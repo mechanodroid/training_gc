@@ -1,4 +1,9 @@
 {
+  "airborne": {
+  	"enabled": true,
+  	 "url": "http://localhost:8180"
+  },
+  "host": "benvm",
   "socket.io": {
     "host": "benvm"
   },

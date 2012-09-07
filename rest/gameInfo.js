@@ -20,18 +20,45 @@ var masterGames = [
    {id: 14, name: "Crates and Barrels", minNumberOfPlayers: 1, maxNumberOfPlayers: 1}
 ];
 
+var masterGamesTest = [];
+
 var feather = require('../lib/feather').getFeather();
+
+function loadMasterList(){
+    feather.logger.warn({category:'REST',message:'Getting master games list from server'});
+    training.api.game.find({
+      view : "default"
+    }, function (err, result){
+        if(err) {
+          feather.logger.warn({category:'REST',message:'Could not find any results in games'});
+        } else {
+          var newGame = {
+            id : 0,
+            name : ""
+          }; 
+          result.documents.forEach(function(key, id, documents) {
+            newGame.id = id;
+            newGame.name = key.name;
+            masterGamesTest.push(newGame);
+            feather.logger.debug({category:'REST', message:'Found document w/ id ' + id + 'key ' + key});
+          });
+
+        }   
+    });
+}
+
 
 module.exports = {
 
   "get": {
 
-    "/": function(req, res, cb) {
+    "/:list": function(req, res, cb) {
 
+      loadMasterList();
       feather.logger.warn({category: 'rest', message: 'someone is getting game info'});
 
      // cb(null, req.session.user);
-     cb(null, masterGames);
+     cb(null, masterGamesTest);
     },
     "/activeGames": function(req, res, cb) {
       cb(null, activeGames);
@@ -42,12 +69,7 @@ module.exports = {
       debugger;
 
       feather.logger.warn({category: 'rest', message: req.body.username + ' is launching a new ' + req.body.name});
-      try {
-        var game = activeGames.add(req.body);
-      } catch (exception) {
-        throw new Error(exception);
-      }
-
+      var game = activeGames.add(req.body,0);
       cb(null, game);
     },
     "/join": function(req, res, cb) {
