@@ -15,7 +15,7 @@ feather.ns("training_gc");
         var myUsername = feather.util.qs.user || "joeschmoe";
         var masterGamesFromRest;
 
-        $.ajax({
+        /*$.ajax({
           url: '/_rest/gameInfo/list/',
           dataType: "json",
           success: function(data) {
@@ -26,8 +26,18 @@ feather.ns("training_gc");
              }
             masterGamesFromRest = data;
             }
-        });
+        });*/
         
+
+        me.server_populateList(function(args) {
+             var gameSelect = me.get("#gamesSelect");
+             for (var i = 0, len = args.result.length; i < len; ++i) {
+                 var item = args.result[i];
+                 gameSelect.append("<option value=\""+item.id+"\">"+item.name+"</option>");
+             }
+            masterGamesFromRest = args.result;
+            }
+        );
 
 
         function launchGame(gamesFromRest){
