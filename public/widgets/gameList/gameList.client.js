@@ -9,6 +9,7 @@ feather.ns("training_gc");
       onReady: function() {
         var me = this;
         var gameChannel = feather.socket.subscribe({id: "games"});
+        //debugger;
         var myUsername = feather.util.qs.user || "honeypotter";
 
         $.ajax({
@@ -31,24 +32,58 @@ feather.ns("training_gc");
               id: "gameLine" + g.id,
               on: {
                 join: function(args) {
-                  var stat = {};
-                  stat.guid = g.id;
-                  stat.username = myUsername;
+                  var selectedGame = {};
+                  selectedGame.id = args;
+                  selectedGame.username = myUsername;
                   $.ajax({
                       url: "/_rest/gameInfo/join",
                       type: "post",
-                      data: stat,
+                      data: selectedGame,
                       success: function(response, textStatus, jqXHR){
-                          me.feather.logger.debug("Hooray, it worked!");
+                        feather.alert(g.name, "Congratulations, " + myUsername +"! You have joined " + g.name);
                       },
                       error: function(jqXHR, textStatus, errorThrown){
-                          me.feather.logger.error(
-                              "The following error occured: "+
-                              textStatus, errorThrown
-                          );
+                        feather.alert(g.name, jqXHR.responseText);
                       },
                       complete: function(){
                       }
+                  });
+                },
+                leave: function(args) {
+                  var selectedGame = {};
+                  selectedGame.id = args;
+                  selectedGame.username = myUsername;
+                  $.ajax({
+                    url: "/_rest/gameInfo/leave",
+                    type: "post",
+                    data: selectedGame,
+                    success: function(response, textStatus, jqXHR) {
+                      
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                      feather.alert(g.name, jqXHR.responseText);
+                    },
+                    complete: function() {
+
+                    }
+                  });
+                },
+                kill: function(args) {
+                  debugger;
+                  var selectedGame = {id: args};
+                  $.ajax({
+                    url: "/_rest/gameInfo/remove",
+                    type: "post",
+                    data: selectedGame,
+                    success: function(response, textStatus, jqXHR) {
+                      
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                      feather.alert(g.name, jqXHR.responseText);
+                    },
+                    complete: function() {
+
+                    }
                   });
                 }
               }
@@ -57,7 +92,7 @@ feather.ns("training_gc");
         }
         
         function findGameLine(g) {
-          return me.children && me.children.findById("gameLine" + g.guid);
+          return me.children && me.children.findById("gameLine" + g.id);
         }
         
         function updateGameLine(g) {
@@ -79,15 +114,17 @@ feather.ns("training_gc");
         }
 
         gameChannel.on("add", function(args) {
-            appendGameLine(args.data);
+          appendGameLine(args.data);
         });
         
         gameChannel.on("update", function(args) {
-            updateGameLine(args.data);
+          debugger;
+          updateGameLine(args.data);
         });
         
         gameChannel.on("remove", function(args) {
-            removeGameLine(args.data);
+          debugger;
+          removeGameLine(args.data);
         });
         
         gameChannel.on("notify", function(args) {

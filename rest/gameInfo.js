@@ -61,7 +61,12 @@ module.exports = {
      cb(null, masterGamesTest);
     },
     "/activeGames": function(req, res, cb) {
-      cb(null, activeGames);
+      //debugger;
+      var games = activeGames.findAll(function(game) {
+        return true;
+      });
+
+      cb(null, games);
     }
   }, 
   "post": {

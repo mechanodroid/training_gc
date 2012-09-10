@@ -1,7 +1,9 @@
 <template name="lineItem" client_enabled="true">
 <p> 
   <input id="$[id]_join" type="button" value="Join" /> 
-  $[options.game.guid]: $[options.game.name] | ($[options.game.currentlyWaiting] of $[options.game.maxNumberOfPlayers])
+  <input id="$[id]_leave" type="button" value="Leave" />
+  <input id="$[id]_kill" type="button" value="Kill" />
+  $[options.game.id]: $[options.game.name] | ($[options.game.users.length] of $[options.game.maxNumberOfPlayers])
 </p>
 </template>
 

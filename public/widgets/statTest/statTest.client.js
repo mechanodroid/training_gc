@@ -30,8 +30,7 @@ feather.ns("training_gc");
             },
             complete: function(){
             }
-        });
-          //gameChannel.send('add', stat);
+          });
         });
         
         me.domEvents.bind(me.get('#update'), 'click', function() {
