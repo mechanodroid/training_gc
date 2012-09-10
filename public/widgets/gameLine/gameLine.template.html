@@ -1,9 +1,10 @@
 <template name="lineItem" client_enabled="true">
-<p> 
-  <input id="$[id]_join" type="button" value="Join" /> 
-  <input id="$[id]_leave" type="button" value="Leave" />
-  <input id="$[id]_kill" type="button" value="Kill" />
-  $[options.game.id]: $[options.game.name] | ($[options.game.users.length] of $[options.game.maxPlayers])
-</p>
+<div class="row">
+  <div class="span1"> <button class="btn btn-primary" type="button" id="$[id]_join">Join</button> </div>
+  <div class="span1"> <button class="btn" type="button" id="$[id]_leave">Leave</button> </div>
+  <div class="span1"> <button class="btn btn-danger" type="button" id="$[id]_kill">Kill</button> </div>
+  <div class="span2"> <h3> $[options.game.name] </h3> </div>
+  <div class="span1"> <span class="badge">$[options.game.users.length]</span> / <span class="badge">$[options.game.maxPlayers]</span> </div>
+</div>
 </template>
 
