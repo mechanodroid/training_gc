@@ -1,6 +1,13 @@
 {
+	"airborne": {
+	"enabled": true,
+	 "url": "http://localhost:8180"
+  	},
 	"host": "anniehost",
 	"socket.io": {
 		"host": "anniehost"
+	},
+	"ui": {
+		"provider": "bootstrap"
 	}
 }

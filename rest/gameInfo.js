@@ -29,11 +29,8 @@ module.exports = {
           cb(null, masterGamesTest);
         }   
       });
-
-     // cb(null, req.session.user);
     },
     "/activeGames": function(req, res, cb) {
-      //debugger;
       var games = activeGames.findAll(function(game) {
         return true;
       });
@@ -43,6 +40,7 @@ module.exports = {
   }, 
   "post": {
     "/addNew": function(req, res, cb) {
+
       feather.logger.warn({category: 'rest', message: req.body.username + ' is launching a new ' + req.body.name});
       //debugger;
       // TODO: Get the launcher to send the real id, not index, then use it here
@@ -57,16 +55,11 @@ module.exports = {
       feather.logger.warn({category: 'rest', message: req.body.username + ' wants to leave a game: ' + req.body.id});
       activeGames.leave(req.body.username, req.body.id, cb);
     },
-    "/remove": function(req, res, cb) {
-      try {
-        var game = _.clone(req.body);
-        game.id = game.guid;
-        activeGames.remove(game);
-        feather.logger.warn({category: 'rest', message: 'The game ' + req.body.id + ' has been removed from stats'});
-        cb(null, game);
-      } catch (exception) {
-        cb(exception, null);
-      }
+      "/remove": function(req, res, cb) {
+      debugger;
+      var game = activeGames.removeById(req.body.id);
+      feather.logger.warn({category: 'rest', message: 'The game ' + req.body.id + ' has been removed from stats'});
+      cb(null, game);
     }
   }
 };
