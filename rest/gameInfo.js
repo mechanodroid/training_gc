@@ -22,9 +22,9 @@ module.exports = {
 
         } else {
           masterGamesTest = [];
-          result.documents.forEach(function(key, id, documents) {
-            masterGamesTest.push({id:id,name:key.name});
-            feather.logger.debug({category:'REST', message:'Found document w/ id ' + id + 'key ' + key.name});
+          result.documents.forEach(function(doc, index, documents) {
+            masterGamesTest.push({id:doc._id,name:doc.name});
+            feather.logger.debug({category:'REST', message:'Found document w/ id ' + doc._id + 'key ' + doc.name});
           });
           cb(null, masterGamesTest);
         }   

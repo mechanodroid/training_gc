@@ -14,21 +14,16 @@ feather.ns("training_gc");
         var gameStatsChannel = feather.socket.subscribe({id: gameStatsRoom});
         var myUsername = feather.util.qs.user || "joeschmoe";
         var masterGamesFromRest;
-
-        /*$.ajax({
-          url: '/_rest/gameInfo/list/',
-          dataType: "json",
-          success: function(data) {
-             var gameSelect = me.get("#gamesSelect");
-             for (var i = 0, len = data.length; i < len; ++i) {
-                 var item = data[i];
-                 gameSelect.append("<option value=\""+item.id+"\">"+item.name+"</option>");
-             }
-            masterGamesFromRest = data;
-            }
-        });*/
         
-
+        function findGameIndexByID(games, id ) {
+          for(var i = 0; i<games.length; i++) {
+             if(games[i].id==id){
+                return i;
+              } 
+          }
+          return 0;
+        }
+      
         me.server_populateList(function(args) {
              var gameSelect = me.get("#gamesSelect");
              for (var i = 0, len = args.result.length; i < len; ++i) {
@@ -41,7 +36,8 @@ feather.ns("training_gc");
 
 
         function launchGame(gamesFromRest){
-          var gameName = gamesFromRest[me.get("#gamesSelect").val()].name;
+          var index = findGameIndexByID(gamesFromRest, me.get("#gamesSelect").val());
+          var gameName = gamesFromRest[index].name;
           gameStatsChannel.send("message", {message: "launched game:" + gameName, username: myUsername});
           appendToLog("Me: " + gameName, " launched");
           me.get("#gamesSelect").val("");
@@ -49,6 +45,7 @@ feather.ns("training_gc");
           var body = {
             name : gameName,
             username : myUsername,
+            id : me.get("#gamesSelect").val()
           }
 
           var request = $.ajax({
