@@ -10,7 +10,6 @@ module.exports = {
 
   "get": {
 
-<<<<<<< HEAD
     "/masterGames": function(req, res, cb) {
 
       feather.logger.warn({category:'REST',message:'Getting master games list from server'});
@@ -30,13 +29,6 @@ module.exports = {
           cb(null, masterGamesTest);
         }   
       });
-
-     // cb(null, req.session.user);
-=======
-    "/": function(req, res, cb) {
-      feather.logger.warn({category: 'rest', message: 'someone is getting game info'});
-      cb(null, masterGames);
->>>>>>> active_games
     },
     "/activeGames": function(req, res, cb) {
       var games = activeGames.findAll(function(game) {
@@ -48,7 +40,7 @@ module.exports = {
   }, 
   "post": {
     "/addNew": function(req, res, cb) {
-<<<<<<< HEAD
+
       feather.logger.warn({category: 'rest', message: req.body.username + ' is launching a new ' + req.body.name});
       //debugger;
       // TODO: Get the launcher to send the real id, not index, then use it here
@@ -58,44 +50,16 @@ module.exports = {
     "/join": function(req, res, cb) {
       feather.logger.warn({category: 'rest', message: req.body.username + ' wants to join a game: ' + req.body.id});
       activeGames.join(req.body.username, req.body.id, cb);
-=======
-      debugger;
-      feather.logger.warn({category: 'rest', message: req.body.username + ' is launching a new ' + req.body.name});
-      var game = activeGames.add(req.body.username, req.body.masterGameId);
-      cb(null, game);
-    },
-    "/join": function(req, res, cb) {
-      debugger;
-      feather.logger.warn({category: 'rest', message: req.body.username + ' wants to join a game: ' + req.body.id});
-      var game = activeGames.join(req.body.username, req.body.id);
-      cb(null, game);
->>>>>>> active_games
     },
     "/leave": function(req, res, cb) {
       feather.logger.warn({category: 'rest', message: req.body.username + ' wants to leave a game: ' + req.body.id});
-<<<<<<< HEAD
       activeGames.leave(req.body.username, req.body.id, cb);
     },
-    "/remove": function(req, res, cb) {
-      try {
-        var game = _.clone(req.body);
-        game.id = game.guid;
-        activeGames.remove(game);
-        feather.logger.warn({category: 'rest', message: 'The game ' + req.body.id + ' has been removed from stats'});
-        cb(null, game);
-      } catch (exception) {
-        cb(exception, null);
-      }
-=======
-      var game = activeGames.leave(req.body.username, req.body.id);
-      cb(null, game);
-    },
-    "/remove": function(req, res, cb) {
+      "/remove": function(req, res, cb) {
       debugger;
       var game = activeGames.removeById(req.body.id);
       feather.logger.warn({category: 'rest', message: 'The game ' + req.body.id + ' has been removed from stats'});
       cb(null, game);
->>>>>>> active_games
     }
   }
 };
