@@ -9,7 +9,6 @@ feather.ns("training_gc");
       },
       onReady: function() {
         var me = this;
-        
         if (me.options && me.options.game) {
           me.updateData(me.options.game)
         }
@@ -21,8 +20,16 @@ feather.ns("training_gc");
         $.tmpl(me.templates.lineItem, me).appendTo(me.container);
         
         me.domEvents.bind(me.get("#join"), "click", function() {
-            me.fire("join", me.options.game.name);
+            me.fire("join", me.options.game.id);
         });  
+
+        me.domEvents.bind(me.get("#leave"), 'click', function() {
+          me.fire("leave", me.options.game.id);
+        })
+
+        me.domEvents.bind(me.get("#kill"), "click", function() {
+          me.fire("kill", me.options.game.id);
+        })
       }
     }
   });

@@ -19,7 +19,7 @@
   },
   "logging": {
     "categories": {
-      "rest": "warn"
+      "rest": "debug"
     }
   }
 }
