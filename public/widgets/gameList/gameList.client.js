@@ -28,21 +28,21 @@ feather.ns("training_gc");
               container: $("<div/>").appendTo(me.get("#gameLineItems")),
               game: g,
               parent: me,
-              id: "gameLine" + g.guid,
+              id: "gameLine" + g.id,
               on: {
                 join: function(args) {
                   var stat = {};
-                  stat.guid = g.guid;
+                  stat.guid = g.id;
                   stat.username = myUsername;
                   $.ajax({
                       url: "/_rest/gameInfo/join",
                       type: "post",
                       data: stat,
                       success: function(response, textStatus, jqXHR){
-                          feather.logger.debug("Hooray, it worked!");
+                          me.feather.logger.debug("Hooray, it worked!");
                       },
                       error: function(jqXHR, textStatus, errorThrown){
-                          feather.logger.error(
+                          me.feather.logger.error(
                               "The following error occured: "+
                               textStatus, errorThrown
                           );

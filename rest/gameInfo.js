@@ -66,42 +66,28 @@ module.exports = {
   }, 
   "post": {
     "/addNew": function(req, res, cb) {
-      debugger;
-
       feather.logger.warn({category: 'rest', message: req.body.username + ' is launching a new ' + req.body.name});
-      var game = activeGames.add(req.body,0);
-      cb(null, game);
+      var tempId = "01226e017b0ca6c6494923265000734d";
+      activeGames.add(req.body.username, tempId, cb);
     },
     "/join": function(req, res, cb) {
-      debugger;
-      
-      feather.logger.warn({category: 'rest', message: req.body.username + ' wants to join a game: ' + game.guid});
-      try {
-        var game = activeGames.join(req.body);
-      } catch (exception) {
-        throw new Error(exception);
-      }
-
-      cb(null, game);
+      feather.logger.warn({category: 'rest', message: req.body.username + ' wants to join a game: ' + req.body.guid});
+      activeGames.join(req.body.username, req.body.guid, cb);
     },
     "/leave": function(req, res, cb) {
-      feather.logger.warn({category: 'rest', message: req.body.username + ' wants to leave a game: ' + game.guid});
-      try {
-        var game = activeGames.leave(req.body);
-      } catch (exception) {
-        throw new Error(exception);
-      }
+      feather.logger.warn({category: 'rest', message: req.body.username + ' wants to leave a game: ' + req.body.guid});
+      activeGames.leave(req.body.username, req.body.guid, cb);
     },
     "/remove": function(req, res, cb) {
-      debugger;
       try {
-        var game = activeGames.remove(req.body);
+        var game = _.clone(req.body);
+        game.id = game.guid;
+        activeGames.remove(game);
         feather.logger.warn({category: 'rest', message: 'The game ' + req.body.game.guid + ' has been removed from stats'});
+        cb(null, game);
       } catch (exception) {
-        throw new Error(exception);
+        cb(exception, null);
       }
-      
-      cb(null, game);
     }
   }
 };
