@@ -1,4 +1,8 @@
 {
+  "socket.io": {
+    "enabled": true,
+    "host": "localhost"
+  },
   "auth": {
     "enabled": true,
     "rules": {
@@ -13,10 +17,9 @@
       }
     }
   },
-
   "logging": {
     "categories": {
-      "rest": "warn"
+      "rest": "debug"
     }
   }
 }

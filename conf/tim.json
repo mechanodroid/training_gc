@@ -1,0 +1,15 @@
+{
+  "airborne": {
+    "enabled": true,
+     "url": "http://localhost:8180"
+  },
+  "host": "localhost",
+  "socket.io": {
+    "host": "localhost"
+  },
+  "logging": {
+    "categories": {
+      "http.access": "off"
+    }
+  }
+}

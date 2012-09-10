@@ -1,0 +1,6 @@
+{
+	"host": "anniehost",
+	"socket.io": {
+		"host": "anniehost"
+	}
+}
