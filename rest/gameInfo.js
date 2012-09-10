@@ -27,11 +27,8 @@ module.exports = {
   "get": {
 
     "/": function(req, res, cb) {
-
       feather.logger.warn({category: 'rest', message: 'someone is getting game info'});
-
-     // cb(null, req.session.user);
-     cb(null, masterGames);
+      cb(null, masterGames);
     },
     "/activeGames": function(req, res, cb) {
       var games = activeGames.findAll(function(game) {
@@ -43,6 +40,7 @@ module.exports = {
   }, 
   "post": {
     "/addNew": function(req, res, cb) {
+      debugger;
       feather.logger.warn({category: 'rest', message: req.body.username + ' is launching a new ' + req.body.name});
       var game = activeGames.add(req.body.username, req.body.masterGameId);
       cb(null, game);
