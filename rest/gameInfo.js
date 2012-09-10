@@ -1,67 +1,39 @@
 var uuid = require('node-uuid/uuid');
 var _ = require('underscore');
-var activeGames = require('../lib/data/activeGames');
-
-var masterGames = [ 
-   {id: 0, name: "Ninja", minNumberOfPlayers: 1, maxNumberOfPlayers: 1},
-   {id: 1, name: "Hamburger", minNumberOfPlayers: 1, maxNumberOfPlayers: 4}, 
-   {id: 2, name: "Chess", minNumberOfPlayers: 2, maxNumberOfPlayers: 2},
-   {id: 3, name: "Monster Bowling", minNumberOfPlayers: 2, maxNumberOfPlayers: 6},
-   {id: 4, name: "End Runner", minNumberOfPlayers: 3, maxNumberOfPlayers: 10},
-   {id: 5, name: "Monitor Throwing", minNumberOfPlayers: 2, maxNumberOfPlayers: 10},
-   {id: 6, name: "Grocery Bagger", minNumberOfPlayers: 2, maxNumberOfPlayers: 4},
-   {id: 7, name: "Bug Squash", minNumberOfPlayers: 1, maxNumberOfPlayers: 0},
-   {id: 8, name: "Sally Says", minNumberOfPlayers: 3, maxNumberOfPlayers: 0},
-   {id: 9, name: "Alien Masher", minNumberOfPlayers: 2, maxNumberOfPlayers: 4},
-   {id: 10, name: "Magic", minNumberOfPlayers: 6, maxNumberOfPlayers: 6},
-   {id: 11, name: "Fruit Ninja", minNumberOfPlayers:  1, maxNumberOfPlayers: 4},
-   {id: 12, name: "Dance Party", minNumberOfPlayers: 2, maxNumberOfPlayers: 10},
-   {id: 13, name: "Sing Snap", minNumberOfPlayers: 1, maxNumberOfPlayers: 0},
-   {id: 14, name: "Crates and Barrels", minNumberOfPlayers: 1, maxNumberOfPlayers: 1}
-];
+var activeGames = training.api.data.activeGames;
 
 var masterGamesTest = [];
 
 var feather = require('../lib/feather').getFeather();
 
-function loadMasterList(){
-    feather.logger.warn({category:'REST',message:'Getting master games list from server'});
-    training.api.game.find({
-      view : "default"
-    }, function (err, result){
-        if(err) {
-          feather.logger.warn({category:'REST',message:'Could not find any results in games'});
-        } else {
-          var newGame = {
-            id : 0,
-            name : ""
-          }; 
-          result.documents.forEach(function(key, id, documents) {
-            newGame.id = id;
-            newGame.name = key.name;
-            masterGamesTest.push(newGame);
-            feather.logger.debug({category:'REST', message:'Found document w/ id ' + id + 'key ' + key});
-          });
-
-        }   
-    });
-}
-
-
 module.exports = {
 
   "get": {
 
-    "/:list": function(req, res, cb) {
+    "/masterGames": function(req, res, cb) {
 
-      loadMasterList();
-      feather.logger.warn({category: 'rest', message: 'someone is getting game info'});
+      feather.logger.warn({category:'REST',message:'Getting master games list from server'});
+      training.api.game.find({
+        view : "default"
+      }, function (err, result){
+        if(err) {
+          feather.logger.warn({category:'REST',message:'Could not find any results in games'});
+          cb(null, masterGamesTest);
+
+        } else {
+          masterGamesTest = [];
+          result.documents.forEach(function(key, id, documents) {
+            masterGamesTest.push({id:id,name:key.name});
+            feather.logger.debug({category:'REST', message:'Found document w/ id ' + id + 'key ' + key.name});
+          });
+          cb(null, masterGamesTest);
+        }   
+      });
 
      // cb(null, req.session.user);
-     cb(null, masterGamesTest);
     },
     "/activeGames": function(req, res, cb) {
-      debugger;
+      //debugger;
       var games = activeGames.findAll(function(game) {
         return true;
       });
@@ -72,24 +44,25 @@ module.exports = {
   "post": {
     "/addNew": function(req, res, cb) {
       feather.logger.warn({category: 'rest', message: req.body.username + ' is launching a new ' + req.body.name});
-      debugger;
+      //debugger;
+      // TODO: Get the launcher to send the real id, not index, then use it here
       var tempId = "01226e017b0ca6c6494923265000734d";
       activeGames.add(req.body.username, tempId, cb);
     },
     "/join": function(req, res, cb) {
-      feather.logger.warn({category: 'rest', message: req.body.username + ' wants to join a game: ' + req.body.guid});
-      activeGames.join(req.body.username, req.body.guid, cb);
+      feather.logger.warn({category: 'rest', message: req.body.username + ' wants to join a game: ' + req.body.id});
+      activeGames.join(req.body.username, req.body.id, cb);
     },
     "/leave": function(req, res, cb) {
-      feather.logger.warn({category: 'rest', message: req.body.username + ' wants to leave a game: ' + req.body.guid});
-      activeGames.leave(req.body.username, req.body.guid, cb);
+      feather.logger.warn({category: 'rest', message: req.body.username + ' wants to leave a game: ' + req.body.id});
+      activeGames.leave(req.body.username, req.body.id, cb);
     },
     "/remove": function(req, res, cb) {
       try {
         var game = _.clone(req.body);
         game.id = game.guid;
         activeGames.remove(game);
-        feather.logger.warn({category: 'rest', message: 'The game ' + req.body.game.guid + ' has been removed from stats'});
+        feather.logger.warn({category: 'rest', message: 'The game ' + req.body.id + ' has been removed from stats'});
         cb(null, game);
       } catch (exception) {
         cb(exception, null);

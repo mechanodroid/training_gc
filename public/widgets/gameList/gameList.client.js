@@ -7,7 +7,6 @@ feather.ns("training_gc");
       onInit: function() {
       },
       onReady: function() {
-        debugger;
         var me = this;
         var gameChannel = feather.socket.subscribe({id: "games"});
         //debugger;
@@ -33,7 +32,6 @@ feather.ns("training_gc");
               id: "gameLine" + g.id,
               on: {
                 join: function(args) {
-                  debugger;
                   var selectedGame = {};
                   selectedGame.id = args;
                   selectedGame.username = myUsername;
