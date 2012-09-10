@@ -34,7 +34,6 @@ module.exports = {
      cb(null, masterGames);
     },
     "/activeGames": function(req, res, cb) {
-      //debugger;
       var games = activeGames.findAll(function(game) {
         return true;
       });
@@ -44,47 +43,26 @@ module.exports = {
   }, 
   "post": {
     "/addNew": function(req, res, cb) {
-      //debugger;
-
       feather.logger.warn({category: 'rest', message: req.body.username + ' is launching a new ' + req.body.name});
-      //try {
-        var game = activeGames.add(req.body.username, req.body.masterGameId);
-      //} catch (exception) {
-        //throw new Error(exception);
-      //}
-
+      var game = activeGames.add(req.body.username, req.body.masterGameId);
       cb(null, game);
     },
     "/join": function(req, res, cb) {
       debugger;
-      
       feather.logger.warn({category: 'rest', message: req.body.username + ' wants to join a game: ' + req.body.id});
-      //try {
-        var game = activeGames.join(req.body.username, req.body.id);
-      //} catch (exception) {
-      //  throw new Error(exception);
-      //}
-
+      var game = activeGames.join(req.body.username, req.body.id);
       cb(null, game);
     },
     "/leave": function(req, res, cb) {
       debugger;
       feather.logger.warn({category: 'rest', message: req.body.username + ' wants to leave a game: ' + req.body.id});
-      //try {
-        var game = activeGames.leave(req.body.username, req.body.id);
-      // } catch (exception) {
-      //   throw new Error(exception);
-      // }
+      var game = activeGames.leave(req.body.username, req.body.id);
+      cb(null, game);
     },
     "/remove": function(req, res, cb) {
       debugger;
-      //try {
-        var game = activeGames.removeById(req.body.id);
-        feather.logger.warn({category: 'rest', message: 'The game ' + req.body.id + ' has been removed from stats'});
-      // } catch (exception) {
-      //   throw new Error(exception);
-      // }
-      
+      var game = activeGames.removeById(req.body.id);
+      feather.logger.warn({category: 'rest', message: 'The game ' + req.body.id + ' has been removed from stats'});
       cb(null, game);
     }
   }
