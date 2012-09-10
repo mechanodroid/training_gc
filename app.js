@@ -34,7 +34,6 @@ exports.onInit = function(feather, cb) {
     feather.logger.info({message: 'configured environment does not have an airborne section defined', category: 'airborne'});
     cb();
   }  
-
 };
 
 
