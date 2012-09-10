@@ -61,7 +61,7 @@ module.exports = {
      cb(null, masterGamesTest);
     },
     "/activeGames": function(req, res, cb) {
-      //debugger;
+      debugger;
       var games = activeGames.findAll(function(game) {
         return true;
       });
@@ -72,6 +72,7 @@ module.exports = {
   "post": {
     "/addNew": function(req, res, cb) {
       feather.logger.warn({category: 'rest', message: req.body.username + ' is launching a new ' + req.body.name});
+      debugger;
       var tempId = "01226e017b0ca6c6494923265000734d";
       activeGames.add(req.body.username, tempId, cb);
     },
