@@ -13,22 +13,9 @@ module.exports = {
     "/masterGames": function(req, res, cb) {
 
       feather.logger.warn({category:'REST',message:'Getting master games list from server'});
-      training.api.game.find({
-        view : "default"
-      }, function (err, result){
-        if(err) {
-          feather.logger.warn({category:'REST',message:'Could not find any results in games'});
-          cb(null, masterGamesTest);
+      var games = activeGames.list(cb);
+      cb(null, games);
 
-        } else {
-          masterGamesTest = [];
-          result.documents.forEach(function(doc, index, documents) {
-            masterGamesTest.push({id:doc._id,name:doc.name});
-            feather.logger.debug({category:'REST', message:'Found document w/ id ' + doc._id + 'key ' + doc.name});
-          });
-          cb(null, masterGamesTest);
-        }   
-      });
     },
     "/activeGames": function(req, res, cb) {
       var games = activeGames.findAll(function(game) {
