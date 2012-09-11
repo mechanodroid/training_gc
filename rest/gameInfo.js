@@ -26,11 +26,10 @@ module.exports = {
   "post": {
     "/addNew": function(req, res, cb) {
 
-      feather.logger.warn({category: 'rest', message: req.body.username + ' is launching a new ' + req.body.name});
+      feather.logger.warn({category: 'rest', message: req.body.username + ' is launching a new ' + req.body.name + ' with id: '+req.body.id});
       //debugger;
       // TODO: Get the launcher to send the real id, not index, then use it here
-      var tempId = "01226e017b0ca6c6494923265000734d";
-      activeGames.add(req.body.username, tempId, cb);
+      activeGames.add(req.body.username, req.body.id, cb);
     },
     "/join": function(req, res, cb) {
       feather.logger.warn({category: 'rest', message: req.body.username + ' wants to join a game: ' + req.body.id});

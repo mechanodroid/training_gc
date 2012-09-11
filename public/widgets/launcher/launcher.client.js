@@ -34,19 +34,25 @@ feather.ns("training_gc");
             }
         );
 
+        function selectValue(){
+          return me.get("#gamesSelect").val();
+        }
 
         function launchGame(gamesFromRest){
           var index = findGameIndexByID(gamesFromRest, me.get("#gamesSelect").val());
           var gameName = gamesFromRest[index].name;
           gameStatsChannel.send("message", {message: "launched game:" + gameName, username: myUsername});
           appendToLog("Me: " + gameName, " launched");
-          me.get("#gamesSelect").val("");
           feather.alert("game launcher",'Game Has Launched: '+gameName);           
           var body = {
             name : gameName,
             username : myUsername,
-            id : me.get("#gamesSelect").val()
+            id : selectValue()
           }
+          alert("ID is "+body.id);
+          me.get("#gamesSelect").val("");
+
+
 
           var request = $.ajax({
             url: '/_rest/gameInfo/addNew/',
