@@ -13,7 +13,7 @@ feather.ns("training_gc");
         var gameStatsRoom = me.options.gamesRoom || "lobby";
         var gameStatsChannel = feather.socket.subscribe({id: gameStatsRoom});
         var myUsername = feather.util.qs.user || "joeschmoe";
-        var masterGamesFromRest;
+        var masterGamesFromServer;
         
         function findGameIndexByID(games, id ) {
           for(var i = 0; i<games.length; i++) {
@@ -30,7 +30,7 @@ feather.ns("training_gc");
                  var item = args.result[i];
                  gameSelect.append("<option value=\""+item.id+"\">"+item.name+"</option>");
              }
-            masterGamesFromRest = args.result;
+            masterGamesFromServer = args.result;
             }
         );
 
@@ -54,12 +54,10 @@ feather.ns("training_gc");
             type: "POST",
             data: body,
           });
-
           request.done(function(msg) {
             //debugger;
             $("#gameLog").html( msg );
           });
-
           request.fail(function(jqXHR, textStatus) {
             alert( "Request failed: " + textStatus );
           });
@@ -79,7 +77,7 @@ feather.ns("training_gc");
 
         //when one of my buttons is clicked, send a chat message on the chat channel
         me.domEvents.bind(me.get("#launchButton"), "click", function() {
-          launchGame(masterGamesFromRest);
+          launchGame(masterGamesFromServer);
         });
       }
     }

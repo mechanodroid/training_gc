@@ -13,9 +13,7 @@ module.exports = {
     "/masterGames": function(req, res, cb) {
 
       feather.logger.warn({category:'REST',message:'Getting master games list from server'});
-      var games = activeGames.list(cb);
-      cb(null, games);
-
+      activeGames.list(cb);
     },
     "/activeGames": function(req, res, cb) {
       var games = activeGames.findAll(function(game) {
